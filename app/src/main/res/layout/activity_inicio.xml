@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="32dp"
+    android:background="@color/gris_fondo">
+
+    <ImageView
+        android:layout_width="341dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/logo_grupo_solutia"
+        />
+    <!-- TÍTULO -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="QR Inventariado"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:textColor="@color/azul_marino"
+        android:layout_marginBottom="40dp"/>
+
+    <!-- BOTÓN ESCANEAR -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnEscanear"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Escanear QR"
+        android:textSize="16sp"
+        android:textColor="@color/blanco"
+        android:layout_marginBottom="20dp"
+        app:backgroundTint="@color/azul_marino"
+        app:cornerRadius="16dp"
+        app:elevation="6dp"/>
+
+    <!-- BOTÓN GENERAR -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnGenerar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Generar QRs"
+        android:textSize="16sp"
+        android:textColor="@color/blanco"
+        android:layout_marginBottom="20dp"
+        app:backgroundTint="@color/azul_marino_claro"
+        app:cornerRadius="16dp"
+        app:elevation="6dp"/>
+
+    <!-- BOTÓN BUSQUEDA -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnBusqueda"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Búsqueda manual"
+        android:textSize="16sp"
+        android:textColor="@color/blanco"
+        android:layout_marginBottom="20dp"
+        app:backgroundTint="@color/naranja_acento"
+        app:cornerRadius="16dp"
+        app:elevation="6dp"/>
+
+    <!-- BOTÓN CREAR ITEM -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCrearItem"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Insertar Artículo"
+        android:textSize="16sp"
+        android:textColor="@color/blanco"
+        app:backgroundTint="@color/azul_marino_claro"
+        app:cornerRadius="16dp"
+        app:elevation="6dp"/>
+
+</LinearLayout>

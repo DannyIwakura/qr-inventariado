@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gris_fondo">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnVolver"
+        android:layout_width="54dp"
+        android:layout_height="69dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/blanco"
+        android:textStyle="bold"
+        app:backgroundTint="@color/azul_marino"
+        app:cornerRadius="16dp"
+        app:icon="@drawable/ic_arrow_back"
+        app:iconPadding="8dp"
+        app:iconTint="@color/blanco"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.067"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- TÍTULO -->
+
+    <TextView
+        android:id="@+id/tvTituloBusqueda"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Búsqueda Manual"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/azul_marino"
+        android:layout_marginTop="40dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- TARJETA PRINCIPAL -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardBusqueda"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:animateLayoutChanges="true"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="8dp"
+        app:cardBackgroundColor="@color/blanco"
+        app:layout_constraintTop_toBottomOf="@id/tvTituloBusqueda"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <!-- MENSAJE -->
+            <TextView
+                android:id="@+id/mensajeConf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Primero, seleccione un CSV"
+                android:gravity="center"
+                android:layout_marginBottom="16dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSeleccionarCSV"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:onClick="SelectCSV"
+                android:text="Seleccionar CSV"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp"
+                app:cornerRadius="16dp"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                app:strokeColor="@color/azul_marino"
+                app:strokeWidth="2dp"
+                android:textColor="@color/azul_marino"
+                app:icon="@drawable/file_open"
+                app:iconTint="@color/azul_marino"
+                app:iconPadding="8dp"/>
+
+            <!-- BOTÓN IMPORTAR -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:onClick="importarCSV"
+                android:text="Importar CSV"
+                android:textColor="@color/blanco"
+                android:textStyle="bold"
+                app:backgroundTint="@color/azul_marino"
+                app:cornerRadius="16dp"
+                app:icon="@drawable/baseline_upload_24"
+                app:iconPadding="8dp"
+                app:iconTint="@color/blanco" />
+
+            <!-- INPUT Nº SERIE -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/inputLayoutSerie"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Número de Serie"
+                android:visibility="gone"
+                app:boxBackgroundMode="outline">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/busquedaInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:inputType="text"
+                    android:padding="12dp"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- BOTÓN BUSCAR -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/busquedaButton"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="16dp"
+                android:onClick="buscar"
+                android:text="Buscar Item"
+                android:textColor="@color/blanco"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:backgroundTint="@color/naranja_acento"
+                app:cornerRadius="16dp"
+                app:icon="@drawable/buscar"
+                app:iconTint="@color/blanco"
+                app:iconPadding="8dp"/>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- TARJETA RESULTADOS -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardResultados"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginBottom="24dp"
+        android:visibility="gone"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="8dp"
+        app:cardBackgroundColor="@color/blanco"
+        app:layout_constraintTop_toBottomOf="@id/cardBusqueda"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <TextView
+                android:id="@+id/tvArticulo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tvEstado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"/>
+
+            <TextView
+                android:id="@+id/tvCentro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"/>
+
+            <TextView
+                android:id="@+id/tvSubsede"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"/>
+
+            <TextView
+                android:id="@+id/tvPabellon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"/>
+
+            <TextView
+                android:id="@+id/tvPlanta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"/>
+
+            <TextView
+                android:id="@+id/tvAula"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"/>
+
+            <TextView
+                android:id="@+id/tvMarca"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"/>
+
+            <TextView
+                android:id="@+id/tvModelo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/tvConfirmacionCAU"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
