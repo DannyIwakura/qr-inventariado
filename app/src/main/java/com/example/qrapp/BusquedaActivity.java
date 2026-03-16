@@ -6,10 +6,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.qrapp.model.Articulo;
@@ -19,11 +21,14 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class BusquedaActivity extends AppCompatActivity {
@@ -106,7 +111,7 @@ public class BusquedaActivity extends AppCompatActivity {
         });
     }
 
-    public void importarCSV (View view) {
+    public void importarCSV(View view) {
         if (csvURI == null) {
             mensajeConf.setText("Seleccione primero un CSV.");
             return;
@@ -143,20 +148,31 @@ public class BusquedaActivity extends AppCompatActivity {
                 String pabellon = columnas[10].trim();
                 String planta = columnas[11].trim();
                 String aula = columnas[12].trim();
-                String verificadoCAU = columnas[21].trim();
+                String verificadoCAUStr = columnas[21].trim();
 
-                databaseHelper.insertarArticuloCompleto(
-                        numSerie,
-                        articulo,
-                        estado,
-                        centro,
-                        subsede,
-                        pabellon,
-                        planta,
-                        aula,
-                        marca,
-                        modelo,
-                        verificadoCAU
+                Date verificadoCAUDate = null;
+                if (!verificadoCAUStr.isEmpty()) {
+                    try {
+                        verificadoCAUDate = formato.parse(verificadoCAUStr);
+                    } catch (Exception e) {
+                        Log.e("CSV", "Error al parsear fecha: " + verificadoCAUStr);
+                    }
+                }
+
+                databaseHelper.insertarArticulo(
+                        new Articulo(
+                                numSerie,
+                                articulo,
+                                estado,
+                                centro,
+                                subsede,
+                                pabellon,
+                                planta,
+                                aula,
+                                marca,
+                                modelo,
+                                verificadoCAUDate
+                        )
                 );
                 filasInsertadas++;
             }
@@ -217,6 +233,73 @@ public class BusquedaActivity extends AppCompatActivity {
         }
 
         cardResultados.setVisibility(View.VISIBLE);
+    }
+
+    public void exportarACSV(View view) {
+        new AlertDialog.Builder(this)
+                .setTitle("Confirmar exportación")
+                .setMessage("Esto exportará toda la base de datos a CSV, ¿seguro que quieres hacelo?")
+                .setPositiveButton("Sí", (dialog, which) -> procederAExportar())
+                .setNegativeButton("No", null)
+                .show();
+    }
+
+    private void procederAExportar() {
+        // Recupero artículos de la DB
+        List<Articulo> articulos = databaseHelper.obtenerTodosLosArticulos();
+
+        if (articulos == null || articulos.isEmpty()) {
+            mensajeConf.setText("No hay artículos para exportar.");
+            return;
+        }
+
+        // Creamos un nuevo CSV
+        try {
+            File file = new File(getExternalFilesDir(null), "articulos_exportados.csv");
+            StringBuilder csvContent = new StringBuilder();
+
+            // Cabecera (respetando las 25 columnas del importador)
+            csvContent.append("Inventario;Expediente;Nє Serie;Estado;Artнculo;Marca;Descripciуn Espacio;Modelo;Destino Dotaciуn;Subsede;Pabellуn;Planta;Espacio;Familia;Subfamilia;Subtipo;Proveedor;Id Patrimonial;Prestamos/Reservas;F. Fin Garantнa;Fecha Baja;Verificado CAU;Propietario;Usuario;Observaciones");
+
+            for (Articulo articulo : articulos) {
+                String fechaCau = (articulo.getVerificadoCAU() != null) ? formato.format(articulo.getVerificadoCAU()) : "";
+
+                // Construimos la línea respetando los índices del importador (25 columnas en total)
+                String linea = String.format(Locale.getDefault(),
+                        "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s",
+                        "", // 0: Inventario
+                        "", // 1: Expediente
+                        articulo.getNumSerie() != null ? articulo.getNumSerie() : "", // 2: Nє Serie
+                        articulo.getEstado() != null ? articulo.getEstado() : "", // 3: Estado
+                        articulo.getArticulo() != null ? articulo.getArticulo() : "", // 4: Artнculo
+                        articulo.getMarca() != null ? articulo.getMarca() : "", // 5: Marca
+                        "", // 6: Descripciуn Espacio
+                        articulo.getModelo() != null ? articulo.getModelo() : "", // 7: Modelo
+                        articulo.getCentro() != null ? articulo.getCentro() : "", // 8: Destino Dotaciуn
+                        articulo.getSubsede() != null ? articulo.getSubsede() : "", // 9: Subsede
+                        articulo.getPabellon() != null ? articulo.getPabellon() : "", // 10: Pabellуn
+                        articulo.getPlanta() != null ? articulo.getPlanta() : "", // 11: Planta
+                        articulo.getAula() != null ? articulo.getAula() : "", // 12: Espacio
+                        "", "", "", "", "", "", "", "", // 13-20: Varios campos vacíos
+                        fechaCau, // 21: Verificado CAU
+                        "", "", "" // 22-24: Propietario, Usuario, Observaciones
+                );
+                csvContent.append("\n").append(linea);
+            }
+
+            // Escribimos el contenido en el archivo
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(csvContent.toString().getBytes(StandardCharsets.UTF_8));
+            fos.close();
+
+            mensajeConf.setText("Exportación completada: " + file.getName());
+            Toast.makeText(this, "Archivo guardado en: " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
+            Log.d("CSV", "Archivo exportado en: " + file.getAbsolutePath());
+
+        } catch (Exception e) {
+            Log.e("CSV", "Error al exportar CSV", e);
+            mensajeConf.setText("Error al exportar CSV.");
+        }
     }
 
 }

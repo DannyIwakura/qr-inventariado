@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.qrapp.model.Articulo;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -144,23 +145,25 @@ public class CrearItemActivity extends AppCompatActivity {
         String modelo = etModelo.getText().toString().trim();
 
         // Verificado CAU con fecha actual
-        String verificadoCAU = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                .format(new Date());
+        Date verificadoCAU = new Date();
 
         // Ahora puedes pasar estos valores a tu método para insertar en la DB
-        db.insertarArticuloCompleto(
-                numSerie,
-                articulo,
-                estado,
-                centro,
-                subsede,
-                pabellon,
-                planta,
-                aula,
-                marca,
-                modelo,
-                verificadoCAU
+        db.insertarArticulo(
+                new Articulo(
+                        numSerie,
+                        articulo,
+                        estado,
+                        centro,
+                        subsede,
+                        pabellon,
+                        planta,
+                        aula,
+                        marca,
+                        modelo,
+                        verificadoCAU
+                )
         );
+        Toast.makeText(this, "Artículo guardado con éxito", Toast.LENGTH_SHORT).show();
         finish();
     }
 }

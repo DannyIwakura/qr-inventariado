@@ -3,19 +3,14 @@ package com.example.qrapp;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.qrapp.model.Articulo;
-import com.google.android.material.card.MaterialCardView;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 public class InfoArticuloActivity extends AppCompatActivity {
 
@@ -37,9 +32,10 @@ public class InfoArticuloActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_info_articulo);
 
+        db = new DatabaseHelper(this);
         articulo = (Articulo) getIntent().getSerializableExtra("articulo");
 
-        //invicio de cada tv
+        //inicio de cada tv
         tvArticulo = findViewById(R.id.tvArticulo);
         tvEstado = findViewById(R.id.tvEstado);
         tvCentro = findViewById(R.id.tvCentro);
@@ -62,20 +58,18 @@ public class InfoArticuloActivity extends AppCompatActivity {
             tvModelo.setText("Modelo: " + articulo.getModelo());
         } else {
             tvArticulo.setText("No se ha podido encontrar un articulo que coincidad con ese número de serie");
-
         }
     }
 
     public void verificarArticulo(View view){
-
         if (articulo == null) return;
 
-        // fecha actual
-        String fechaActual = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-                .format(new Date());
+        // fecha actual como objeto Date, compatible con DatabaseHelper.actualizarVerificadoCAU
+        Date fechaActual = new Date();
 
         // actualizar en la BD
         db.actualizarVerificadoCAU(articulo.getNumSerie(), fechaActual);
-
+        
+        Toast.makeText(this, "Artículo verificado correctamente", Toast.LENGTH_SHORT).show();
     }
 }

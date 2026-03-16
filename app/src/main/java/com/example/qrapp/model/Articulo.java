@@ -3,6 +3,9 @@ package com.example.qrapp.model;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * Representa un artículo del inventario.
+ */
 public class Articulo implements Serializable {
     private int id;
     private String numSerie;
@@ -15,8 +18,7 @@ public class Articulo implements Serializable {
     private String aula;
     private String marca;
     private String modelo;
-
-    private Date verfidacoCAU;
+    private Date verificadoCAU;
 
     public Articulo() {
     }
@@ -24,8 +26,7 @@ public class Articulo implements Serializable {
     public Articulo(String numSerie, String articulo, String estado,
                     String centro, String subsede, String pabellon,
                     String planta, String aula, String marca, String modelo,
-                    Date verfidacoCAU) {
-
+                    Date verificadoCAU) {
         this.numSerie = numSerie;
         this.articulo = articulo;
         this.estado = estado;
@@ -36,9 +37,10 @@ public class Articulo implements Serializable {
         this.aula = aula;
         this.marca = marca;
         this.modelo = modelo;
-        this.verfidacoCAU = verfidacoCAU;
+        this.verificadoCAU = verificadoCAU;
     }
 
+    // Getters
     public int getId() { return id; }
     public String getNumSerie() { return numSerie; }
     public String getArticulo() { return articulo; }
@@ -50,8 +52,9 @@ public class Articulo implements Serializable {
     public String getAula() { return aula; }
     public String getMarca() { return marca; }
     public String getModelo() { return modelo; }
-    public Date getVerificadoCAU() { return verfidacoCAU; }
+    public Date getVerificadoCAU() { return verificadoCAU; }
 
+    // Setters
     public void setId(int id) { this.id = id; }
     public void setNumSerie(String numSerie) { this.numSerie = numSerie; }
     public void setArticulo(String articulo) { this.articulo = articulo; }
@@ -63,5 +66,13 @@ public class Articulo implements Serializable {
     public void setAula(String aula) { this.aula = aula; }
     public void setMarca(String marca) { this.marca = marca; }
     public void setModelo(String modelo) { this.modelo = modelo; }
-    public void setVerfidacoCAU(Date verfidacoCAU) { this.verfidacoCAU = verfidacoCAU; }
+    public void setVerificadoCAU(Date verificadoCAU) { this.verificadoCAU = verificadoCAU; }
+
+    @Override
+    public String toString() {
+        return "Articulo{" +
+                "numSerie='" + numSerie + '\'' +
+                ", articulo='" + articulo + '\'' +
+                '}';
+    }
 }

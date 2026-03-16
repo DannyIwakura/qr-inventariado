@@ -56,43 +56,57 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="284dp"
             android:orientation="vertical"
             android:padding="24dp">
 
             <!-- MENSAJE -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button2"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:onClick="importarCSV"
+                android:text="Importar CSV"
+                android:textColor="@color/blanco"
+                android:textStyle="bold"
+                app:backgroundTint="@color/azul_marino"
+                app:cornerRadius="16dp"
+                app:icon="@drawable/baseline_upload_24"
+                app:iconPadding="8dp"
+                app:iconTint="@color/blanco" />
+
             <TextView
                 android:id="@+id/mensajeConf"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Primero, seleccione un CSV"
+                android:layout_marginBottom="16dp"
                 android:gravity="center"
-                android:layout_marginBottom="16dp"/>
+                android:text="Primero, seleccione un CSV" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSeleccionarCSV"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:layout_marginBottom="12dp"
                 android:onClick="SelectCSV"
                 android:text="Seleccionar CSV"
-                android:textStyle="bold"
-                android:layout_marginBottom="12dp"
-                app:cornerRadius="16dp"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                app:strokeColor="@color/azul_marino"
-                app:strokeWidth="2dp"
                 android:textColor="@color/azul_marino"
+                android:textStyle="bold"
+                app:cornerRadius="16dp"
                 app:icon="@drawable/file_open"
+                app:iconPadding="8dp"
                 app:iconTint="@color/azul_marino"
-                app:iconPadding="8dp"/>
+                app:strokeColor="@color/azul_marino"
+                app:strokeWidth="2dp" />
 
             <!-- BOTÓN IMPORTAR -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:onClick="importarCSV"
-                android:text="Importar CSV"
+                android:onClick="exportarACSV"
+                android:text="Exportar CSV"
                 android:textColor="@color/blanco"
                 android:textStyle="bold"
                 app:backgroundTint="@color/azul_marino"
@@ -114,9 +128,9 @@
                     android:id="@+id/busquedaInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="48dp"
                     android:inputType="text"
-                    android:padding="12dp"/>
+                    android:minHeight="48dp"
+                    android:padding="12dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- BOTÓN BUSCAR -->
@@ -133,8 +147,8 @@
                 app:backgroundTint="@color/naranja_acento"
                 app:cornerRadius="16dp"
                 app:icon="@drawable/buscar"
-                app:iconTint="@color/blanco"
-                app:iconPadding="8dp"/>
+                app:iconPadding="8dp"
+                app:iconTint="@color/blanco" />
 
         </LinearLayout>
 
