@@ -126,7 +126,7 @@ public class GenerarQRActivity extends AppCompatActivity {
         String linea;
         boolean encabezado = true;
         String separador = ";";
-        int columnaExtraida = 4;
+        int columnaExtraida = 2;
 
         Set<String> numerosProcesados = new HashSet<>();
 

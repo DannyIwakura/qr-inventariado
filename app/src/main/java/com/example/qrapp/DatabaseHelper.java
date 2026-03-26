@@ -147,13 +147,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean existeArticulo(String numSerie) {
         SQLiteDatabase db = this.getReadableDatabase();
         //Busacamos el numero de serie que nos pasan
-        String query = "SELECT 1 FROM articulos WHERE numSerie = ? LIMIT 1";
+        String query = "SELECT 1 FROM " + TABLE_NAME + " WHERE " + COL_NUMSERIE + " = ? LIMIT 1";
         Cursor cursor = db.rawQuery(query, new String[]{numSerie});
 
         boolean existe = cursor.moveToFirst();
 
         cursor.close();
-        db.close();
+        // db.close(); // Generalmente es mejor dejar que el pool gestione esto o cerrar el helper al destruir la actividad
 
         return existe;
     }
@@ -163,8 +163,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put("Verificado CAU", fecha);
+        values.put(COL_VERIFICADOCAU, fecha);
 
-        db.update("articulos", values, "numSerie = ?", new String[]{numSerie});
+        db.update(TABLE_NAME, values, COL_NUMSERIE + " = ?", new String[]{numSerie});
     }
+
+    public void actualizarUbicacion(String numSerie, String pabellon, String planta, String aula){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COL_PABELLON, pabellon);
+        values.put(COL_PLANTA, planta);
+        values.put(COL_AULA, aula);
+
+        db.update(TABLE_NAME, values, COL_NUMSERIE + " = ?", new String[]{numSerie});
+    }
+
+
+
 }

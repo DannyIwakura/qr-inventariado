@@ -2,16 +2,15 @@ package com.example.qrapp;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.qrapp.model.Articulo;
-import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,7 +35,7 @@ public class InfoArticuloActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_info_articulo);
-
+        db = new DatabaseHelper(this);
         articulo = (Articulo) getIntent().getSerializableExtra("articulo");
 
         //invicio de cada tv
@@ -67,7 +66,7 @@ public class InfoArticuloActivity extends AppCompatActivity {
     }
 
     public void verificarArticulo(View view){
-
+        //comprobar que no viene vacio, en tal caso terminamod la ejecucion
         if (articulo == null) return;
 
         // fecha actual
@@ -77,5 +76,54 @@ public class InfoArticuloActivity extends AppCompatActivity {
         // actualizar en la BD
         db.actualizarVerificadoCAU(articulo.getNumSerie(), fechaActual);
 
+        //mostrar dialogo confirmacion
+        new AlertDialog.Builder(this)
+                .setTitle("Verificado")
+                .setMessage("El articulo ha sido verificado correctamente")
+                .show();
     }
+
+    public void mostrarDialogoUbicacion(View view){
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_formulario, null);
+        EditText etPabellon = dialogView.findViewById(R.id.etPabellon);
+        EditText etPlanta = dialogView.findViewById(R.id.etPlanta);
+        EditText etAula = dialogView.findViewById(R.id.etAula);
+
+        // Pre-rellenar con datos actuales si es necesario
+        etPabellon.setText(articulo.getPabellon());
+        etPlanta.setText(articulo.getPlanta());
+        etAula.setText(articulo.getAula());
+
+        new MaterialAlertDialogBuilder(this)
+                .setView(dialogView)
+                .setPositiveButton("Actualizar", (dialog, which) -> {
+                    String pabellon = etPabellon.getText().toString();
+                    String planta = etPlanta.getText().toString();
+                    String aula = etAula.getText().toString();
+
+                    // Lógica para guardar los cambios...
+                    actualizarDatosEnServidor(pabellon, planta, aula);
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    public void actualizarDatosEnServidor(String pabellon, String planta, String aula) {
+        //comprobar que no viene vacio, en tal caso terminamod la ejecucion
+        if (pabellon == null || planta == null || aula == null) return;
+
+        //actualizarmos en la base de datos
+        db.actualizarUbicacion(articulo.getNumSerie(), pabellon, planta, aula);
+
+        //actualizamos el articulo localmente para que se refleje en la interfaz
+        articulo.setPabellon(pabellon);
+        articulo.setPlanta(planta);
+        articulo.setAula(aula);
+
+        //los mostramos en los tvs
+        tvPabellon.setText("Pabellón: " + articulo.getPabellon());
+        tvPlanta.setText("Planta: " + articulo.getPlanta());
+        tvAula.setText("Aula: " + articulo.getAula());
+    }
+
 }
