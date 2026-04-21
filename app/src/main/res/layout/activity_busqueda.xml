@@ -25,8 +25,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- TÍTULO -->
-
     <TextView
         android:id="@+id/tvTituloBusqueda"
         android:layout_width="wrap_content"
@@ -40,13 +38,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- TARJETA PRINCIPAL -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardBusqueda"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="24dp"
-        android:animateLayoutChanges="true"
         app:cardCornerRadius="20dp"
         app:cardElevation="8dp"
         app:cardBackgroundColor="@color/blanco"
@@ -60,7 +56,6 @@
             android:orientation="vertical"
             android:padding="24dp">
 
-            <!-- MENSAJE -->
             <TextView
                 android:id="@+id/mensajeConf"
                 android:layout_width="match_parent"
@@ -86,7 +81,6 @@
                 app:iconTint="@color/azul_marino"
                 app:iconPadding="8dp"/>
 
-            <!-- BOTÓN IMPORTAR -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button"
                 android:layout_width="match_parent"
@@ -101,7 +95,6 @@
                 app:iconPadding="8dp"
                 app:iconTint="@color/blanco" />
 
-            <!-- INPUT Nº SERIE -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/inputLayoutSerie"
                 android:layout_width="match_parent"
@@ -119,7 +112,6 @@
                     android:padding="12dp"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- BOTÓN BUSCAR -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/busquedaButton"
                 android:layout_width="match_parent"
@@ -135,93 +127,35 @@
                 app:icon="@drawable/buscar"
                 app:iconTint="@color/blanco"
                 app:iconPadding="8dp"/>
-
         </LinearLayout>
-
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- TARJETA RESULTADOS -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardResultados"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="24dp"
         android:visibility="gone"
         app:cardCornerRadius="20dp"
         app:cardElevation="8dp"
         app:cardBackgroundColor="@color/blanco"
         app:layout_constraintTop_toBottomOf="@id/cardBusqueda"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp">
-
-            <TextView
-                android:id="@+id/tvArticulo"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:id="@+id/containerResultados"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/tvEstado"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"/>
-
-            <TextView
-                android:id="@+id/tvCentro"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"/>
-
-            <TextView
-                android:id="@+id/tvSubsede"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"/>
-
-            <TextView
-                android:id="@+id/tvPabellon"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"/>
-
-            <TextView
-                android:id="@+id/tvPlanta"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"/>
-
-            <TextView
-                android:id="@+id/tvAula"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"/>
-
-            <TextView
-                android:id="@+id/tvMarca"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"/>
-
-            <TextView
-                android:id="@+id/tvModelo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:id="@+id/tvConfirmacionCAU"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-        </LinearLayout>
-
+                android:orientation="vertical"
+                android:padding="24dp" />
+        </ScrollView>
     </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

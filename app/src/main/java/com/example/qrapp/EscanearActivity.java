@@ -43,7 +43,7 @@ public class EscanearActivity extends AppCompatActivity {
                 DatabaseHelper databaseHelper = new DatabaseHelper(this);;
                 GlobalData globalData = (GlobalData) getApplication();
                 globalData.setNumSerie(result.getContents());
-                //Guardamos en memoria
+                //buscamos el articulo por id en la db
                 Articulo articulo = databaseHelper.consultarPorNumSerie(result.getContents());
                 //Pasamos el objeto a otra activity
                 Intent intent = new Intent(this, InfoArticuloActivity.class);

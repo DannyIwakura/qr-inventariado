@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -37,73 +38,42 @@ public class BusquedaActivity extends AppCompatActivity {
     private TextInputEditText busquedaInput;
     private TextInputLayout inputLayoutSerie;
     private MaterialCardView cardResultados;
-    private TextView tvArticulo;
-    private TextView tvEstado;
-    private TextView tvCentro;
-    private TextView tvSubsede;
-    private TextView tvPabellon;
-    private TextView tvPlanta;
-    private TextView tvAula;
-    private TextView tvMarca;
-    private TextView tvModelo;
-    private TextView tvVerificacionCAU;
-    //Sacar fecha actual
-    Date fecha = new Date();
-
-    SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-    String fechaActual = formato.format(fecha);
-
+    private LinearLayout containerResultados;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_busqueda);
+        
         mensajeConf = findViewById(R.id.mensajeConf);
         busquedaButton = findViewById(R.id.busquedaButton);
         busquedaInput = findViewById(R.id.busquedaInput);
         inputLayoutSerie = findViewById(R.id.inputLayoutSerie);
         cardResultados = findViewById(R.id.cardResultados);
-        tvArticulo = findViewById(R.id.tvArticulo);
-        tvEstado = findViewById(R.id.tvEstado);
-        tvCentro = findViewById(R.id.tvCentro);
-        tvSubsede = findViewById(R.id.tvSubsede);
-        tvPabellon = findViewById(R.id.tvPabellon);
-        tvPlanta = findViewById(R.id.tvPlanta);
-        tvAula = findViewById(R.id.tvAula);
-        tvMarca = findViewById(R.id.tvMarca);
-        tvModelo = findViewById(R.id.tvModelo);
-        tvVerificacionCAU = findViewById(R.id.tvConfirmacionCAU);
+        containerResultados = findViewById(R.id.containerResultados);
         btnVolver = findViewById(R.id.btnVolver);
+        
         busquedaInput.setVisibility(View.GONE);
         busquedaButton.setVisibility(View.GONE);
 
-        btnVolver.setOnClickListener(v -> {
-            finish();
-        });
+        btnVolver.setOnClickListener(v -> finish());
 
-        //registramos el selector de csv al inicio
         selectCSV = registerForActivityResult(
                 new ActivityResultContracts.OpenDocument(),
                 uri -> {
                     if (uri != null) {
                         csvURI = uri;
-
-                        mensajeConf.setText("CSV Cargado Correctamente. Pulse en importar para cargarlo en memmoria y poder realizar búsquedas.");
+                        mensajeConf.setText("CSV Cargado Correctamente. Pulse en importar.");
                     }
                 }
         );
 
-        //iniviamos la intancia de la base de datos
         databaseHelper = new DatabaseHelper(this);
     }
 
     public void SelectCSV(View view) {
-        selectCSV.launch(
-                new String[]{
-                        "text/*",
-                        "application/vnd.ms-excel\""
-        });
+        selectCSV.launch(new String[]{"text/*", "application/vnd.ms-excel"});
     }
 
     public void importarCSV (View view) {
@@ -112,66 +82,67 @@ public class BusquedaActivity extends AppCompatActivity {
             return;
         }
 
-        int filasInsertadas = 0;
-
         try {
             InputStream inputStream = getContentResolver().openInputStream(csvURI);
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
 
             String linea;
             boolean primeraLinea = true;
+            int filasInsertadas = 0;
 
             while ((linea = reader.readLine()) != null) {
-
-                // Saltar cabecera
                 if (primeraLinea) {
                     primeraLinea = false;
                     continue;
                 }
 
-                String[] columnas = linea.split(";", -1);
+                String[] col = linea.split(";", -1);
+                if (col.length < 25) continue;
 
-                if (columnas.length < 25) continue;
+                Articulo a = new Articulo();
+                a.setInventario(col[0].trim());
+                a.setExpediente(col[1].trim());
+                a.setNumSerie(col[2].trim());
+                a.setEstado(col[3].trim());
+                a.setArticulo(col[4].trim());
+                a.setMarca(col[5].trim());
+                a.setDescripcionEspacio(col[6].trim());
+                a.setModelo(col[7].trim());
+                a.setDestinoDotacion(col[8].trim());
+                a.setSubsede(col[9].trim());
+                a.setPabellon(col[10].trim());
+                a.setPlanta(col[11].trim());
+                a.setEspacio(col[12].trim());
+                a.setFamilia(col[13].trim());
+                a.setSubfamilia(col[14].trim());
+                a.setSubtipo(col[15].trim());
+                a.setProveedor(col[16].trim());
+                a.setIdPatrimonial(col[17].trim());
+                a.setPrestamosReservas(col[18].trim());
+                a.setfFinGarantia(col[19].trim());
+                a.setFechaBaja(col[20].trim());
+                
+                String verificadoStr = col[21].trim();
+                if (!verificadoStr.isEmpty()) {
+                    try {
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                        a.setVerificadoCAU(sdf.parse(verificadoStr));
+                    } catch (Exception e) {}
+                }
+                
+                a.setPropietario(col[22].trim());
+                a.setUsuario(col[23].trim());
+                a.setObservaciones(col[24].trim());
 
-                String numSerie = columnas[2].trim();
-                String estado = columnas[3].trim();
-                String articulo = columnas[4].trim();
-                String marca = columnas[5].trim();
-                String modelo = columnas[7].trim();
-                String centro = columnas[8].trim();
-                String subsede = columnas[9].trim();
-                String pabellon = columnas[10].trim();
-                String planta = columnas[11].trim();
-                String aula = columnas[12].trim();
-                String verificadoCAU = columnas[21].trim();
-
-                databaseHelper.insertarArticuloCompleto(
-                        numSerie,
-                        articulo,
-                        estado,
-                        centro,
-                        subsede,
-                        pabellon,
-                        planta,
-                        aula,
-                        marca,
-                        modelo,
-                        verificadoCAU
-                );
+                databaseHelper.insertarArticuloCompleto(a);
                 filasInsertadas++;
             }
 
             reader.close();
-
-            mensajeConf.setText("Importación completada correctamente.");
+            mensajeConf.setText("Importación completada: " + filasInsertadas + " filas.");
             inputLayoutSerie.setVisibility(View.VISIBLE);
-            inputLayoutSerie.setEnabled(true);
-            inputLayoutSerie.setHintEnabled(true);
-            inputLayoutSerie.requestLayout();
-
             busquedaButton.setVisibility(View.VISIBLE);
             busquedaInput.setVisibility(View.VISIBLE);
-            busquedaInput.requestFocus();
         } catch (Exception e) {
             e.printStackTrace();
             mensajeConf.setText("Error al importar CSV.");
@@ -179,44 +150,59 @@ public class BusquedaActivity extends AppCompatActivity {
     }
 
     public void buscar(View view) {
+        String numSerie = busquedaInput.getText().toString().toUpperCase();
+        Articulo art = databaseHelper.consultarPorNumSerie(numSerie);
 
-            //Recojo el numero de serie que escribe el usuario y lo ponemos en mayusculas
-            String numSerie = busquedaInput.getText().toString().toUpperCase();
-
-            //Convoco la consultar y me traigo el articulo encontrado
-            Articulo articuloRecuperado = databaseHelper.consultarPorNumSerie(numSerie);
-
-            if (articuloRecuperado != null) {
-                mostrarArticulo(articuloRecuperado);
-            } else {
-                mensajeConf.setText("No se encontró ningún resultado");
-            }
-
-
+        if (art != null) {
+            mostrarArticulo(art);
+        } else {
+            mensajeConf.setText("No se encontró ningún resultado");
+            cardResultados.setVisibility(View.GONE);
+        }
     }
 
-    private void mostrarArticulo(Articulo articulo) {
-
-        tvArticulo.setText("Artículo: " + articulo.getArticulo());
-        tvEstado.setText("Estado: " + articulo.getEstado());
-        tvCentro.setText("Centro: " + articulo.getCentro());
-        tvSubsede.setText("Subsede: " + articulo.getSubsede());
-        tvPabellon.setText("Pabellón: " + articulo.getPabellon());
-        tvPlanta.setText("Planta: " + articulo.getPlanta());
-        tvAula.setText("Aula: " + articulo.getAula());
-        tvMarca.setText("Marca: " + articulo.getMarca());
-        tvModelo.setText("Modelo: " + articulo.getModelo());
-        Date fecha = articulo.getVerificadoCAU();
-
-        if (fecha != null) {
-            SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            Log.d("CAU"," Fecha CAU: " + fecha);
-            tvVerificacionCAU.setText("Verificación CAU: " + formato.format(fecha));
-        } else {
-            tvVerificacionCAU.setText("Verificación CAU: No verificado");
+    private void mostrarArticulo(Articulo a) {
+        containerResultados.removeAllViews();
+        
+        addField("Inventario", a.getInventario());
+        addField("Expediente", a.getExpediente());
+        addField("Nº Serie", a.getNumSerie());
+        addField("Estado", a.getEstado());
+        addField("Artículo", a.getArticulo());
+        addField("Marca", a.getMarca());
+        addField("Descripción Espacio", a.getDescripcionEspacio());
+        addField("Modelo", a.getModelo());
+        addField("Destino Dotación", a.getDestinoDotacion());
+        addField("Subsede", a.getSubsede());
+        addField("Pabellón", a.getPabellon());
+        addField("Planta", a.getPlanta());
+        addField("Espacio", a.getEspacio());
+        addField("Familia", a.getFamilia());
+        addField("Subfamilia", a.getSubfamilia());
+        addField("Subtipo", a.getSubtipo());
+        addField("Proveedor", a.getProveedor());
+        addField("Id Patrimonial", a.getIdPatrimonial());
+        addField("Prestamos/Reservas", a.getPrestamosReservas());
+        addField("F. Fin Garantía", a.getfFinGarantia());
+        addField("Fecha Baja", a.getFechaBaja());
+        
+        String fechaCAU = "No verificado";
+        if (a.getVerificadoCAU() != null) {
+            fechaCAU = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(a.getVerificadoCAU());
         }
+        addField("Verificado CAU", fechaCAU);
+        
+        addField("Propietario", a.getPropietario());
+        addField("Usuario", a.getUsuario());
+        addField("Observaciones", a.getObservaciones());
 
         cardResultados.setVisibility(View.VISIBLE);
     }
 
+    private void addField(String label, String value) {
+        TextView tv = new TextView(this);
+        tv.setText(label + ": " + (value != null ? value : ""));
+        tv.setPadding(0, 4, 0, 4);
+        containerResultados.addView(tv);
+    }
 }
