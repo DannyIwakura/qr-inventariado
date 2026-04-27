@@ -1,6 +1,7 @@
 package com.example.qrapp;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -85,6 +86,9 @@ public class GenerarQRActivity extends AppCompatActivity {
                     }
                 }
         );
+
+        // Procesar si venimos de "Compartir"
+        manejarIntentCompartido();
     }
 
     public void seleccionarCSV(View view) {
@@ -309,5 +313,34 @@ public class GenerarQRActivity extends AppCompatActivity {
 
         os.close();
         pdfDocument.close();
+    }
+
+    // Función para importar el CSV cuando se comparte con "Compartir con..."
+    private void manejarIntentCompartido() {
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            // Caso 1: "Compartir con..."
+            Uri uri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+            if (uri != null) {
+                cargarCSVDesdeUri(uri);
+            }
+        } else if (Intent.ACTION_VIEW.equals(action)) {
+            // Caso: Abrir archivo directamente
+            Uri uri = intent.getData();
+            if (uri != null) {
+                cargarCSVDesdeUri(uri);
+            }
+        }
+    }
+
+    private void cargarCSVDesdeUri(Uri uri) {
+        this.csvUri = uri;
+        String nombreCSV = getFileName(uri);
+        tvNombreCSV.setText(nombreCSV);
+        tvNombreCSV.setVisibility(View.VISIBLE);
+        Toast.makeText(this, "CSV cargado correctamente", Toast.LENGTH_SHORT).show();
     }
 }
