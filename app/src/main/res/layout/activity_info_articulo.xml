@@ -87,6 +87,27 @@
         app:icon="@drawable/edit"
         app:iconPadding="8dp"
         app:iconTint="@color/blanco"
+        app:layout_constraintBottom_toTopOf="@+id/btnDarBaja"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDarBaja"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="8dp"
+        android:onClick="darDeBajaArticulo"
+        android:text="Dar de baja"
+        android:textAllCaps="false"
+        android:textColor="@color/blanco"
+        android:textStyle="bold"
+        app:backgroundTint="#D32F2F"
+        app:cornerRadius="16dp"
+        app:icon="@drawable/delete"
+        app:iconPadding="8dp"
+        app:iconTint="@color/blanco"
         app:layout_constraintBottom_toTopOf="@+id/btnVolver"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

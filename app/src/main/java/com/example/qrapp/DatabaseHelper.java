@@ -16,7 +16,7 @@ import java.util.Locale;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "inventario.db";
-    private static final int DATABASE_VERSION = 2; // Incremented version
+    private static final int DATABASE_VERSION = 2;
 
     public static final String TABLE_NAME = "articulos";
     public static final String COL_ID = "id";
@@ -188,6 +188,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COL_VERIFICADOCAU, fecha);
+        db.update(TABLE_NAME, values, COL_NUMSERIE + " = ?", new String[]{numSerie});
+    }
+
+    public void actualizarFechaBaja(String numSerie, String fecha) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COL_FECHA_BAJA, fecha);
         db.update(TABLE_NAME, values, COL_NUMSERIE + " = ?", new String[]{numSerie});
     }
 }
