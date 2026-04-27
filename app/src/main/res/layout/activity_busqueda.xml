@@ -1,161 +1,208 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gris_fondo">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnVolver"
-        android:layout_width="54dp"
-        android:layout_height="69dp"
-        android:layout_marginTop="16dp"
-        android:textColor="@color/blanco"
-        android:textStyle="bold"
-        app:backgroundTint="@color/azul_marino"
-        app:cornerRadius="16dp"
-        app:icon="@drawable/ic_arrow_back"
-        app:iconPadding="8dp"
-        app:iconTint="@color/blanco"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.067"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tvTituloBusqueda"
-        android:layout_width="wrap_content"
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Búsqueda Manual"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@color/azul_marino"
-        android:layout_marginTop="40dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:background="@android:color/transparent"
+        app:elevation="0dp">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardBusqueda"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="24dp"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="8dp"
-        app:cardBackgroundColor="@color/blanco"
-        app:layout_constraintTop_toBottomOf="@id/tvTituloBusqueda"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnVolver"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:icon="@drawable/ic_arrow_back"
+                app:iconTint="@color/azul_marino"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvTituloBusqueda"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Búsqueda de Artículos"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/azul_marino"
+                app:layout_constraintBottom_toBottomOf="@+id/btnVolver"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/btnVolver" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:padding="16dp">
 
-            <TextView
-                android:id="@+id/mensajeConf"
+            <!-- Sección de Importación (Compacta) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardImport"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Primero, seleccione un CSV"
-                android:gravity="center"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSeleccionarCSV"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:onClick="SelectCSV"
-                android:text="Seleccionar CSV"
-                android:textStyle="bold"
-                android:layout_marginBottom="12dp"
-                app:cornerRadius="16dp"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                app:strokeColor="@color/azul_marino"
-                app:strokeWidth="2dp"
-                android:textColor="@color/azul_marino"
-                app:icon="@drawable/file_open"
-                app:iconTint="@color/azul_marino"
-                app:iconPadding="8dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:onClick="importarCSV"
-                android:text="Importar CSV"
-                android:textColor="@color/blanco"
-                android:textStyle="bold"
-                app:backgroundTint="@color/azul_marino"
-                app:cornerRadius="16dp"
-                app:icon="@drawable/baseline_upload_24"
-                app:iconPadding="8dp"
-                app:iconTint="@color/blanco" />
+                    <TextView
+                        android:id="@+id/mensajeConf"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Base de datos local"
+                        android:textSize="12sp"
+                        android:textColor="@color/azul_marino"
+                        android:layout_marginBottom="8dp"/>
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnSeleccionarCSV"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Cargar CSV"
+                            android:layout_marginEnd="8dp"
+                            android:onClick="SelectCSV"
+                            app:icon="@drawable/file_open" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/button"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Importar"
+                            android:onClick="importarCSV"
+                            app:backgroundTint="@color/azul_marino"
+                            app:icon="@drawable/baseline_upload_24" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Sección de Búsqueda Principal -->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/inputLayoutSerie"
+                android:id="@+id/inputLayoutSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Número de Serie"
-                android:visibility="gone"
-                app:boxBackgroundMode="outline">
+                android:hint="Nº Serie o Inventario"
+                app:startIconDrawable="@drawable/buscar"
+                app:endIconMode="clear_text"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/busquedaInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="48dp"
-                    android:inputType="text"
-                    android:padding="12dp"/>
+                    android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Filtros Avanzados (Opcional/Expandible) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnShowFilters"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Filtros avanzados"
+                app:icon="@drawable/baseline_upload_24" /> <!-- Cambiar por icono de filtro si existe -->
+
+            <LinearLayout
+                android:id="@+id/extraFiltersContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Nombre del Artículo"
+                    android:layout_marginTop="8dp"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/filterArticulo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Subsede"
+                    android:layout_marginTop="8dp"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/filterSubsede"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/busquedaButton"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="56dp"
                 android:layout_marginTop="16dp"
                 android:onClick="buscar"
-                android:text="Buscar Item"
-                android:textColor="@color/blanco"
+                android:text="BUSCAR AHORA"
                 android:textStyle="bold"
-                android:visibility="gone"
-                app:backgroundTint="@color/naranja_acento"
-                app:cornerRadius="16dp"
-                app:icon="@drawable/buscar"
-                app:iconTint="@color/blanco"
-                app:iconPadding="8dp"/>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+                app:cornerRadius="12dp"
+                app:backgroundTint="@color/naranja_acento" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardResultados"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="24dp"
-        android:visibility="gone"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="8dp"
-        app:cardBackgroundColor="@color/blanco"
-        app:layout_constraintTop_toBottomOf="@id/cardBusqueda"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <LinearLayout
-                android:id="@+id/containerResultados"
+            <!-- Resultados -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardResultados"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="24dp" />
-        </ScrollView>
-    </com.google.android.material.card.MaterialCardView>
+                android:layout_marginTop="24dp"
+                android:visibility="gone"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="#EEEEEE">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <LinearLayout
+                    android:id="@+id/containerResultados"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp" />
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
