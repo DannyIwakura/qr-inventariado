@@ -8,9 +8,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.qrapp.model.Articulo;
 
+import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -128,47 +131,106 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.insertWithOnConflict(TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
+
+     // Normaliza un string eliminando tildes y diacríticos
+    private String normalizarTexto(String texto) {
+        if (texto == null) return "";
+        String normalizado = Normalizer.normalize(texto, Normalizer.Form.NFD);
+        return normalizado.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "").toLowerCase();
+    }
+
+    //Devuelve la expresión SQL para normalizar una columna (quitar tildes y minúsculas)
+    private String getNormalizarColumnaSql(String nombreColumna) {
+        return "REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(LOWER(" + nombreColumna + "), 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u')";
+    }
+
+    public List<Articulo> buscarArticulos(String queryPrincipal, String articulo, String subsede) {
+        List<Articulo> lista = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        
+        StringBuilder selection = new StringBuilder("1=1");
+        List<String> selectionArgs = new ArrayList<>();
+
+        if (queryPrincipal != null && !queryPrincipal.trim().isEmpty()) {
+            selection.append(" AND (").append(COL_NUMSERIE).append(" LIKE ? OR ")
+                     .append(COL_INVENTARIO).append(" LIKE ? OR ")
+                     .append(COL_ID_PATRIMONIAL).append(" LIKE ?)");
+            String q = "%" + queryPrincipal.trim() + "%";
+            selectionArgs.add(q);
+            selectionArgs.add(q);
+            selectionArgs.add(q);
+        }
+
+        if (articulo != null && !articulo.trim().isEmpty()) {
+            // Aplicamos normalización manual en el SQL para la columna y normalizamos el argumento en Java
+            selection.append(" AND ").append(getNormalizarColumnaSql(COL_ARTICULO)).append(" LIKE ?");
+            selectionArgs.add("%" + normalizarTexto(articulo) + "%");
+        }
+
+        if (subsede != null && !subsede.trim().isEmpty()) {
+            selection.append(" AND ").append(getNormalizarColumnaSql(COL_SUBSEDE)).append(" LIKE ?");
+            selectionArgs.add("%" + normalizarTexto(subsede) + "%");
+        }
+
+        Cursor cursor = db.query(TABLE_NAME, null, selection.toString(), 
+                selectionArgs.toArray(new String[0]), null, null, COL_ARTICULO + " ASC");
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                Articulo a = cursorToArticulo(cursor);
+                lista.add(a);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        return lista;
+    }
+
+    private Articulo cursorToArticulo(Cursor cursor) {
+        Articulo a = new Articulo();
+        a.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COL_ID)));
+        a.setInventario(cursor.getString(cursor.getColumnIndexOrThrow(COL_INVENTARIO)));
+        a.setExpediente(cursor.getString(cursor.getColumnIndexOrThrow(COL_EXPEDIENTE)));
+        a.setNumSerie(cursor.getString(cursor.getColumnIndexOrThrow(COL_NUMSERIE)));
+        a.setEstado(cursor.getString(cursor.getColumnIndexOrThrow(COL_ESTADO)));
+        a.setArticulo(cursor.getString(cursor.getColumnIndexOrThrow(COL_ARTICULO)));
+        a.setMarca(cursor.getString(cursor.getColumnIndexOrThrow(COL_MARCA)));
+        a.setDescripcionEspacio(cursor.getString(cursor.getColumnIndexOrThrow(COL_DESC_ESPACIO)));
+        a.setModelo(cursor.getString(cursor.getColumnIndexOrThrow(COL_MODELO)));
+        a.setDestinoDotacion(cursor.getString(cursor.getColumnIndexOrThrow(COL_DESTINO)));
+        a.setSubsede(cursor.getString(cursor.getColumnIndexOrThrow(COL_SUBSEDE)));
+        a.setPabellon(cursor.getString(cursor.getColumnIndexOrThrow(COL_PABELLON)));
+        a.setPlanta(cursor.getString(cursor.getColumnIndexOrThrow(COL_PLANTA)));
+        a.setEspacio(cursor.getString(cursor.getColumnIndexOrThrow(COL_ESPACIO)));
+        a.setFamilia(cursor.getString(cursor.getColumnIndexOrThrow(COL_FAMILIA)));
+        a.setSubfamilia(cursor.getString(cursor.getColumnIndexOrThrow(COL_SUBFAMILIA)));
+        a.setSubtipo(cursor.getString(cursor.getColumnIndexOrThrow(COL_SUBTIPO)));
+        a.setProveedor(cursor.getString(cursor.getColumnIndexOrThrow(COL_PROVEEDOR)));
+        a.setIdPatrimonial(cursor.getString(cursor.getColumnIndexOrThrow(COL_ID_PATRIMONIAL)));
+        a.setPrestamosReservas(cursor.getString(cursor.getColumnIndexOrThrow(COL_PRESTAMOS)));
+        a.setfFinGarantia(cursor.getString(cursor.getColumnIndexOrThrow(COL_F_FIN_GARANTIA)));
+        a.setFechaBaja(cursor.getString(cursor.getColumnIndexOrThrow(COL_FECHA_BAJA)));
+        a.setPropietario(cursor.getString(cursor.getColumnIndexOrThrow(COL_PROPIETARIO)));
+        a.setUsuario(cursor.getString(cursor.getColumnIndexOrThrow(COL_USUARIO)));
+        a.setObservaciones(cursor.getString(cursor.getColumnIndexOrThrow(COL_OBSERVACIONES)));
+
+        String fechaStr = cursor.getString(cursor.getColumnIndexOrThrow(COL_VERIFICADOCAU));
+        if (fechaStr != null && !fechaStr.isEmpty()) {
+            try {
+                SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                a.setVerificadoCAU(formato.parse(fechaStr));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return a;
+    }
+
     public Articulo consultarPorNumSerie(String nSerie) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_NAME, null, COL_NUMSERIE + " = ?", new String[]{nSerie}, null, null, null);
 
         if (cursor != null && cursor.moveToFirst()) {
-            Articulo a = new Articulo();
-            a.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COL_ID)));
-            a.setInventario(cursor.getString(cursor.getColumnIndexOrThrow(COL_INVENTARIO)));
-            a.setExpediente(cursor.getString(cursor.getColumnIndexOrThrow(COL_EXPEDIENTE)));
-            a.setNumSerie(cursor.getString(cursor.getColumnIndexOrThrow(COL_NUMSERIE)));
-            a.setEstado(cursor.getString(cursor.getColumnIndexOrThrow(COL_ESTADO)));
-            a.setArticulo(cursor.getString(cursor.getColumnIndexOrThrow(COL_ARTICULO)));
-            a.setMarca(cursor.getString(cursor.getColumnIndexOrThrow(COL_MARCA)));
-            a.setDescripcionEspacio(cursor.getString(cursor.getColumnIndexOrThrow(COL_DESC_ESPACIO)));
-            a.setModelo(cursor.getString(cursor.getColumnIndexOrThrow(COL_MODELO)));
-            a.setDestinoDotacion(cursor.getString(cursor.getColumnIndexOrThrow(COL_DESTINO)));
-            a.setSubsede(cursor.getString(cursor.getColumnIndexOrThrow(COL_SUBSEDE)));
-            a.setPabellon(cursor.getString(cursor.getColumnIndexOrThrow(COL_PABELLON)));
-            a.setPlanta(cursor.getString(cursor.getColumnIndexOrThrow(COL_PLANTA)));
-            a.setEspacio(cursor.getString(cursor.getColumnIndexOrThrow(COL_ESPACIO)));
-            a.setFamilia(cursor.getString(cursor.getColumnIndexOrThrow(COL_FAMILIA)));
-            a.setSubfamilia(cursor.getString(cursor.getColumnIndexOrThrow(COL_SUBFAMILIA)));
-            a.setSubtipo(cursor.getString(cursor.getColumnIndexOrThrow(COL_SUBTIPO)));
-            a.setProveedor(cursor.getString(cursor.getColumnIndexOrThrow(COL_PROVEEDOR)));
-            a.setIdPatrimonial(cursor.getString(cursor.getColumnIndexOrThrow(COL_ID_PATRIMONIAL)));
-            a.setPrestamosReservas(cursor.getString(cursor.getColumnIndexOrThrow(COL_PRESTAMOS)));
-            a.setfFinGarantia(cursor.getString(cursor.getColumnIndexOrThrow(COL_F_FIN_GARANTIA)));
-            a.setFechaBaja(cursor.getString(cursor.getColumnIndexOrThrow(COL_FECHA_BAJA)));
-            a.setPropietario(cursor.getString(cursor.getColumnIndexOrThrow(COL_PROPIETARIO)));
-            a.setUsuario(cursor.getString(cursor.getColumnIndexOrThrow(COL_USUARIO)));
-            a.setObservaciones(cursor.getString(cursor.getColumnIndexOrThrow(COL_OBSERVACIONES)));
-
-            String fechaStr = cursor.getString(cursor.getColumnIndexOrThrow(COL_VERIFICADOCAU));
-            if (fechaStr != null && !fechaStr.isEmpty()) {
-                try {
-                    SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                    a.setVerificadoCAU(formato.parse(fechaStr));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            }
+            Articulo a = cursorToArticulo(cursor);
             cursor.close();
             return a;
         }

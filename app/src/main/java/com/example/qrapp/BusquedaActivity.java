@@ -2,11 +2,10 @@ package com.example.qrapp;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -17,28 +16,25 @@ import com.example.qrapp.model.Articulo;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class BusquedaActivity extends AppCompatActivity {
 
-    Button btnVolver;
     private TextView mensajeConf;
     private ActivityResultLauncher<String[]> selectCSV;
     private Uri csvURI;
     private DatabaseHelper databaseHelper;
-    private MaterialButton busquedaButton;
-    private TextInputEditText busquedaInput;
-    private TextInputLayout inputLayoutSerie;
+    private TextInputEditText busquedaInput, filterArticulo, filterSubsede;
     private MaterialCardView cardResultados;
-    private LinearLayout containerResultados;
+    private LinearLayout containerResultados, extraFiltersContainer;
+    private MaterialButton btnShowFilters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,25 +42,35 @@ public class BusquedaActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_busqueda);
         
+        // Inicialización de vistas
         mensajeConf = findViewById(R.id.mensajeConf);
-        busquedaButton = findViewById(R.id.busquedaButton);
         busquedaInput = findViewById(R.id.busquedaInput);
-        inputLayoutSerie = findViewById(R.id.inputLayoutSerie);
+        filterArticulo = findViewById(R.id.filterArticulo);
+        filterSubsede = findViewById(R.id.filterSubsede);
         cardResultados = findViewById(R.id.cardResultados);
         containerResultados = findViewById(R.id.containerResultados);
-        btnVolver = findViewById(R.id.btnVolver);
+        extraFiltersContainer = findViewById(R.id.extraFiltersContainer);
+        btnShowFilters = findViewById(R.id.btnShowFilters);
         
-        busquedaInput.setVisibility(View.GONE);
-        busquedaButton.setVisibility(View.GONE);
+        findViewById(R.id.btnVolver).setOnClickListener(v -> finish());
 
-        btnVolver.setOnClickListener(v -> finish());
+        // Mostrar/ocultar filtros avanzados
+        btnShowFilters.setOnClickListener(v -> {
+            if (extraFiltersContainer.getVisibility() == View.GONE) {
+                extraFiltersContainer.setVisibility(View.VISIBLE);
+                btnShowFilters.setText("Ocultar filtros");
+            } else {
+                extraFiltersContainer.setVisibility(View.GONE);
+                btnShowFilters.setText("Filtros avanzados");
+            }
+        });
 
         selectCSV = registerForActivityResult(
                 new ActivityResultContracts.OpenDocument(),
                 uri -> {
                     if (uri != null) {
                         csvURI = uri;
-                        mensajeConf.setText("CSV Cargado Correctamente. Pulse en importar.");
+                        mensajeConf.setText("CSV Cargado: " + uri.getLastPathSegment());
                     }
                 }
         );
@@ -73,12 +79,12 @@ public class BusquedaActivity extends AppCompatActivity {
     }
 
     public void SelectCSV(View view) {
-        selectCSV.launch(new String[]{"text/*", "application/vnd.ms-excel"});
+        selectCSV.launch(new String[]{"text/*", "application/vnd.ms-excel", "text/comma-separated-values"});
     }
 
     public void importarCSV (View view) {
         if (csvURI == null) {
-            mensajeConf.setText("Seleccione primero un CSV.");
+            Toast.makeText(this, "Seleccione primero un CSV", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -139,70 +145,57 @@ public class BusquedaActivity extends AppCompatActivity {
             }
 
             reader.close();
-            mensajeConf.setText("Importación completada: " + filasInsertadas + " filas.");
-            inputLayoutSerie.setVisibility(View.VISIBLE);
-            busquedaButton.setVisibility(View.VISIBLE);
-            busquedaInput.setVisibility(View.VISIBLE);
+            mensajeConf.setText("Base de datos actualizada: " + filasInsertadas + " registros.");
+            Toast.makeText(this, "Importación completada", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
-            mensajeConf.setText("Error al importar CSV.");
+            mensajeConf.setText("Error al importar CSV");
         }
     }
 
     public void buscar(View view) {
-        String numSerie = busquedaInput.getText().toString().toUpperCase();
-        Articulo art = databaseHelper.consultarPorNumSerie(numSerie);
+        String query = busquedaInput.getText().toString();
+        String artNombre = filterArticulo.getText().toString();
+        String subsede = filterSubsede.getText().toString();
 
-        if (art != null) {
-            mostrarArticulo(art);
-        } else {
-            mensajeConf.setText("No se encontró ningún resultado");
-            cardResultados.setVisibility(View.GONE);
-        }
-    }
+        List<Articulo> resultados = databaseHelper.buscarArticulos(query, artNombre, subsede);
 
-    private void mostrarArticulo(Articulo a) {
         containerResultados.removeAllViews();
-        
-        addField("Inventario", a.getInventario());
-        addField("Expediente", a.getExpediente());
-        addField("Nº Serie", a.getNumSerie());
-        addField("Estado", a.getEstado());
-        addField("Artículo", a.getArticulo());
-        addField("Marca", a.getMarca());
-        addField("Descripción Espacio", a.getDescripcionEspacio());
-        addField("Modelo", a.getModelo());
-        addField("Destino Dotación", a.getDestinoDotacion());
-        addField("Subsede", a.getSubsede());
-        addField("Pabellón", a.getPabellon());
-        addField("Planta", a.getPlanta());
-        addField("Espacio", a.getEspacio());
-        addField("Familia", a.getFamilia());
-        addField("Subfamilia", a.getSubfamilia());
-        addField("Subtipo", a.getSubtipo());
-        addField("Proveedor", a.getProveedor());
-        addField("Id Patrimonial", a.getIdPatrimonial());
-        addField("Prestamos/Reservas", a.getPrestamosReservas());
-        addField("F. Fin Garantía", a.getfFinGarantia());
-        addField("Fecha Baja", a.getFechaBaja());
-        
-        String fechaCAU = "No verificado";
-        if (a.getVerificadoCAU() != null) {
-            fechaCAU = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(a.getVerificadoCAU());
+        // Comprobar si vienen o no resultados
+        if (resultados != null && !resultados.isEmpty()) {
+            cardResultados.setVisibility(View.VISIBLE);
+            for (Articulo a : resultados) {
+                agregarTarjetaResultado(a);
+            }
+        } else {
+            cardResultados.setVisibility(View.GONE);
+            Toast.makeText(this, "No se encontraron resultados", Toast.LENGTH_SHORT).show();
         }
-        addField("Verificado CAU", fechaCAU);
-        
-        addField("Propietario", a.getPropietario());
-        addField("Usuario", a.getUsuario());
-        addField("Observaciones", a.getObservaciones());
-
-        cardResultados.setVisibility(View.VISIBLE);
     }
 
-    private void addField(String label, String value) {
-        TextView tv = new TextView(this);
-        tv.setText(label + ": " + (value != null ? value : ""));
-        tv.setPadding(0, 4, 0, 4);
-        containerResultados.addView(tv);
+    private void agregarTarjetaResultado(Articulo a) {
+        View item = getLayoutInflater().inflate(android.R.layout.simple_list_item_2, null);
+        TextView text1 = item.findViewById(android.R.id.text1);
+        TextView text2 = item.findViewById(android.R.id.text2);
+
+        text1.setText(a.getArticulo() + " (" + a.getNumSerie() + ")");
+        text1.setTextColor(getResources().getColor(R.color.azul_marino));
+        text1.setTypeface(null, android.graphics.Typeface.BOLD);
+
+        text2.setText("Inv: " + a.getInventario() + " | Sede: " + a.getSubsede() + "\n" + a.getModelo());
+        
+        item.setPadding(0, 16, 0, 16);
+        item.setOnClickListener(v -> {
+            // Aquí se podría abrir InfoArticuloActivity pasando el objeto o el ID
+            Toast.makeText(this, "Ver detalles de: " + a.getNumSerie(), Toast.LENGTH_SHORT).show();
+        });
+
+        containerResultados.addView(item);
+        
+        // Añadir una línea separadora
+        View divider = new View(this);
+        divider.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1));
+        divider.setBackgroundColor(0xFFEEEEEE);
+        containerResultados.addView(divider);
     }
 }
