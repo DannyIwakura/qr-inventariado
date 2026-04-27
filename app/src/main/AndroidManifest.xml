@@ -37,7 +37,26 @@
             android:exported="false" />
         <activity
             android:name=".GenerarQRActivity"
-            android:exported="false" />
+            android:exported="true">
+            <!-- Intent filter para recibir archivos compartidos -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/*" />
+                <data android:mimeType="application/vnd.ms-excel" />
+            </intent-filter>
+
+            <!-- Opcional: Para abrir el archivo directamente desde un explorador de archivos -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="content" />
+                <data android:host="*" />
+                <data android:mimeType="text/*" />
+                <data android:mimeType="application/vnd.ms-excel" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".InicioActivity"
             android:exported="false" />
