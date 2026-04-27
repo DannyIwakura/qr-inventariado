@@ -72,8 +72,20 @@
         android:text="Insertar Artículo"
         android:textSize="16sp"
         android:textColor="@color/blanco"
+        android:layout_marginBottom="20dp"
         app:backgroundTint="@color/azul_marino_claro"
         app:cornerRadius="16dp"
         app:elevation="6dp"/>
+
+    <!-- BOTÓN CAMBIAR TEMA -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnTema"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cambiar Tema"
+        android:textColor="@color/azul_marino"
+        app:icon="@drawable/edit"
+        app:iconTint="@color/azul_marino"/>
 
 </LinearLayout>

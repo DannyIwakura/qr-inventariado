@@ -2,264 +2,271 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:background="@color/gris_fondo">
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnVolver"
-        android:layout_width="54dp"
-        android:layout_height="69dp"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:textColor="@color/blanco"
-        android:textStyle="bold"
         app:backgroundTint="@color/azul_marino"
-        app:cornerRadius="16dp"
+        app:cornerRadius="12dp"
         app:icon="@drawable/ic_arrow_back"
-        app:iconPadding="8dp"
         app:iconTint="@color/blanco"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.067"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Scrollable content -->
+    <TextView
+        android:id="@+id/tvTitulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Crear Nuevo Item"
+        android:textColor="@color/azul_marino"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/btnVolver"
+        app:layout_constraintStart_toEndOf="@+id/btnVolver"
+        app:layout_constraintTop_toTopOf="@+id/btnVolver" />
+
     <ScrollView
         android:id="@+id/scrollContenido"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="16dp"
+        android:padding="16dp"
         app:layout_constraintBottom_toTopOf="@+id/llBotones"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:fillViewport="true">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnVolver">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Paso 1: Información básica -->
+            <!-- PASO 1: IDENTIFICACIÓN -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/paso1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="8dp"
-                android:padding="16dp">
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Paso 1 – Información básica"
-                        android:textStyle="bold"
+                        android:layout_marginBottom="20dp"
+                        android:text="Paso 1 – Identificación"
+                        android:textColor="@color/azul_marino"
                         android:textSize="18sp"
-                        android:layout_marginBottom="16dp"/>
+                        android:textStyle="bold" />
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Número de Serie">
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etNumSerie"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                    <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:hint="Inventario">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etInventario" android:layout_width="match_parent" android:layout_height="wrap_content" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Artículo">
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etArticulo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                    <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:hint="Expediente">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etExpediente" android:layout_width="match_parent" android:layout_height="wrap_content" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Estado"
-                        android:textSize="14sp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="4dp"/>
+                    <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:hint="Número de Serie">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etNumSerie" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                    <Spinner
-                        android:id="@+id/spinnerEstado"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="@color/azul_marino"/>
+                    <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:hint="Artículo">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etArticulo" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="Estado" android:textStyle="bold" />
+                    <Spinner android:id="@+id/spinnerEstado" android:layout_width="match_parent" android:layout_height="48dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Paso 2: Ubicación -->
+            <!-- PASO 2: CLASIFICACIÓN -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/paso2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="8dp"
-                android:padding="16dp"
+                android:layout_marginBottom="24dp"
                 android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Paso 2 – Ubicación"
-                        android:textStyle="bold"
+                        android:layout_marginBottom="20dp"
+                        android:text="Paso 2 – Clasificación"
+                        android:textColor="@color/azul_marino"
                         android:textSize="18sp"
-                        android:layout_marginBottom="16dp"/>
+                        android:textStyle="bold" />
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Centro">
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etCentro"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                    <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:hint="Marca">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etMarca" android:layout_width="match_parent" android:layout_height="wrap_content" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Subsede">
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etSubsede"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                    <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:hint="Modelo">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etModelo" android:layout_width="match_parent" android:layout_height="wrap_content" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Pabellón">
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etPabellon"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                    <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:hint="Familia">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etFamilia" android:layout_width="match_parent" android:layout_height="wrap_content" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Planta">
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etPlanta"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                    <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:hint="Subfamilia">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etSubfamilia" android:layout_width="match_parent" android:layout_height="wrap_content" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Aula">
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etAula"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                    <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:hint="Subtipo">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etSubtipo" android:layout_width="match_parent" android:layout_height="wrap_content" />
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:hint="Proveedor">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etProveedor" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Paso 3: Equipo -->
+            <!-- PASO 3: UBICACIÓN -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/paso3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="8dp"
-                android:padding="16dp"
+                android:layout_marginBottom="24dp"
                 android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Paso 3 – Equipo"
-                        android:textStyle="bold"
+                        android:layout_marginBottom="20dp"
+                        android:text="Paso 3 – Ubicación"
+                        android:textColor="@color/azul_marino"
                         android:textSize="18sp"
-                        android:layout_marginBottom="16dp"/>
+                        android:textStyle="bold" />
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Marca">
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etMarca"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                    <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:hint="Subsede">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etSubsede" android:layout_width="match_parent" android:layout_height="wrap_content" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Modelo">
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etModelo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                    <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:hint="Pabellón">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etPabellon" android:layout_width="match_parent" android:layout_height="wrap_content" />
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:hint="Planta">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etPlanta" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:hint="Espacio">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etEspacio" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:hint="Descripción Espacio">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etDescEspacio" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- PASO 4: OTROS -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/paso4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:text="Paso 4 – Otros datos"
+                        android:textColor="@color/azul_marino"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:hint="Destino Dotación">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etDestino" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:hint="Id Patrimonial">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etIdPatrimonial" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:hint="Prestamos/Reservas">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etPrestamos" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:hint="F. Fin Garantía">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etFinGarantia" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:hint="Propietario">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etPropietario" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:hint="Observaciones">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etObservaciones" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
     </ScrollView>
 
-    <!-- Botones fijos abajo -->
     <LinearLayout
         android:id="@+id/llBotones"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp">
+        android:background="@color/white"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnAnterior"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_weight="1"
             android:text="Atrás"
-            android:textAllCaps="false"
-            android:textStyle="bold"
-            app:backgroundTint="@color/gris_claro"
-            app:cornerRadius="16dp"/>
+            app:cornerRadius="12dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSiguiente"
             android:layout_width="0dp"
             android:layout_height="56dp"
+            android:layout_marginStart="12dp"
             android:layout_weight="1"
-            android:layout_marginStart="8dp"
             android:text="Siguiente"
-            android:textAllCaps="false"
-            android:textStyle="bold"
             app:backgroundTint="@color/azul_marino"
-            app:cornerRadius="16dp"/>
+            app:cornerRadius="12dp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

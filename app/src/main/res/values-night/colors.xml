@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="azul_marino">#E0E1DD</color>
+    <color name="azul_marino_claro">#778DA9</color>
+    <color name="naranja_acento">#FF9F1C</color>
+    <color name="blanco">#1B263B</color>
+    <color name="gris_fondo">#0D1B2A</color>
+    <color name="gris_claro">#415A77</color>
+
+    <!-- Colores para el Logo en modo oscuro -->
+    <color name="logo_verde_oscuro">#2BAC70</color>
+    <color name="logo_verde_claro">#4ADE80</color>
+    <color name="logo_azul">#94A3B8</color>
+    <color name="logo_naranja">#FB923C</color>
+    <color name="logo_blanco">#F1F3F6</color>
+</resources>

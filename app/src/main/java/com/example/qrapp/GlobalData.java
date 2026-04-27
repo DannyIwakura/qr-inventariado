@@ -13,7 +13,6 @@ public class GlobalData extends Application {
     }
 
     public void setNumSerie(String numSerie) {
-        //
         this.numSerie = numSerie;
     }
 }
